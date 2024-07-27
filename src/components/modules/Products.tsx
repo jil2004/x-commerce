@@ -5,6 +5,8 @@ import { ShoppingCart, Heart, Star } from "lucide-react";
 import Section from "../shared/Section";
 import { AnimatedCard } from "../shared/AnimatedCard";
 import { cn } from "@/lib/utils";
+import { useDispatch } from "react-redux"; // Import useDispatch
+import { add } from "@/redux/cartSlice"; // Import add action
 
 const ProductCard = ({
   name,
@@ -13,15 +15,20 @@ const ProductCard = ({
   rating,
   bgColor,
   iconColor,
-}: {
-  name: string;
-  description: string;
-  price: number;
-  rating: number;
-  bgColor: string;
-  iconColor: string;
 }) => {
   const [isHovered, setIsHovered] = useState(false);
+  const dispatch = useDispatch(); // Initialize dispatch
+
+  const handleAdd = () => {
+    const product = {
+      name,
+      description,
+      price,
+      rating,
+      id: Date.now(), // Unique ID for the product
+    };
+    dispatch(add(product)); // Dispatch the add action
+  };
 
   return (
     <motion.div
@@ -34,7 +41,7 @@ const ProductCard = ({
     >
       <div
         className={cn(
-          "relative  h-56  flex items-center justify-center",
+          "relative h-56 flex items-center justify-center",
           bgColor
         )}
       >
@@ -74,6 +81,7 @@ const ProductCard = ({
             className="flex items-center space-x-2 bg-indigo-600 text-white px-4 py-2 rounded-lg"
             whileHover={{ scale: 1.05, backgroundColor: "#4338ca" }}
             whileTap={{ scale: 0.95 }}
+            onClick={handleAdd} // Call handleAdd on button click
           >
             <ShoppingCart className="w-5 h-5" />
             <span>Add to Cart</span>

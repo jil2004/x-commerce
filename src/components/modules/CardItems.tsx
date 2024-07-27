@@ -1,30 +1,44 @@
-import React from "react";
-import { Button } from "../ui/button";
-import { Delete, Trash, Trash2, Trash2Icon } from "lucide-react";
+'use client'
+import React from 'react';
+import { Button } from '../ui/button';
+import { Trash2 } from 'lucide-react';
+import { useSelector, useDispatch } from 'react-redux';
+import { remove } from '@/redux/Cartslice';
+import { state } from '@/redux/Cartslice';
 
-type Props = {};
+type CartItem = {
+  id: number;
+  name: string;
+  description: string;
+  price: number;
+  image: string;
+};
 
-export default function CardItems({}: Props) {
+export default function CardItems() {
+
+  const cartItems = useSelector((state) => state.cart.items);
+  const dispatch = useDispatch;
+
+  const handleRemove = (id: number) => {
+    dispatch(remove(id));
+  };
+
   return (
     <div>
-      <CardItem
-        title="Apple Watch"
-        description="Series 7"
-        price={399}
-        image="https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-01.jpg"
-      />
-      <CardItem
-        title="Apple Watch"
-        description="Series 7"
-        price={399}
-        image="https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-01.jpg"
-      />
-      <CardItem
-        title="Apple Watch"
-        description="Series 7"
-        price={399}
-        image="https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-01.jpg"
-      />
+      {cartItems.length > 0 ? (
+        cartItems.map((item: CartItem) => (
+          <CardItem
+            key={item.id}
+            title={item.name}
+            description={item.description || 'No description'}
+            price={item.price}
+            image={item.image || 'default-image-url.jpg'} // Re-added image prop
+            onRemove={() => handleRemove(item.id)}
+          />
+        ))
+      ) : (
+        <p>Your cart is empty.</p>
+      )}
     </div>
   );
 }
@@ -34,14 +48,16 @@ const CardItem = ({
   description,
   price,
   image,
+  onRemove,
 }: {
   title: string;
   description: string;
   price: number;
   image: string;
+  onRemove: () => void;
 }) => {
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex items-center justify-between p-4 border-b">
       <div className="flex items-center gap-4">
         <img src={image} alt={title} className="w-16 h-16" />
         <div>
@@ -52,9 +68,7 @@ const CardItem = ({
       <div>
         <p className="text-lg font-semibold">${price}</p>
       </div>
-
-      {/* //remove from cart button  */}
-      <Button variant={"destructive"}>
+      <Button variant={"destructive"} onClick={onRemove}>
         <Trash2 />
       </Button>
     </div>

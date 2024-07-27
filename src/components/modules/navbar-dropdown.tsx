@@ -27,6 +27,7 @@ import { NavItems } from "@/constants";
 import { Button } from "../ui/button";
 import { ArrowBigRight, ShoppingBag } from "lucide-react";
 import CardItems from "./CardItems";
+import { useSelector } from "react-redux";
 
 const components: { title: string; href: string; description: string }[] = [
   {
