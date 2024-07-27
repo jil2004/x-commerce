@@ -4,7 +4,6 @@ import { Button } from '../ui/button';
 import { Trash2 } from 'lucide-react';
 import { useSelector, useDispatch } from 'react-redux';
 import { remove } from '@/redux/Cartslice';
-import { state } from '@/redux/Cartslice';
 
 type CartItem = {
   id: number;
@@ -16,15 +15,15 @@ type CartItem = {
 
 export default function CardItems() {
 
-  const cartItems = useSelector((state) => state.cart.items);
-  const dispatch = useDispatch;
+  const cartItems = useSelector((state: any) => state.cart.items);
+  const dispatch = useDispatch();
 
   const handleRemove = (id: number) => {
     dispatch(remove(id));
   };
 
   return (
-    <div>
+    <div className="max-h-[70vh] overflow-y-auto">
       {cartItems.length > 0 ? (
         cartItems.map((item: CartItem) => (
           <CardItem
